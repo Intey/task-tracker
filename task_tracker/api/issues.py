@@ -1,7 +1,7 @@
 import typing as t
 from uuid import uuid4
 
-from jira_proxy.storage import Storage
+from task_tracker.storage import Storage
 from loguru import logger
 
 

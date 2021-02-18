@@ -2,7 +2,7 @@ from uuid import uuid4
 
 import pytest
 
-from jira_proxy.entities import Gantt, Issue, User
+from task_tracker.entities import Gantt, Issue, User
 from tests.exceptions import LogicError
 
 

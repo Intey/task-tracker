@@ -1,4 +1,4 @@
-from jira_proxy import __version__
+from task_tracker import __version__
 
 
 def test_version():

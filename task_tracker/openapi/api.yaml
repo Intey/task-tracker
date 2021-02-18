@@ -71,7 +71,7 @@ paths:
                       $ref: "#/components/schemas/issue"
   /issues/gantt:
     post:
-      operationId: jira_proxy.api.issues.gantt
+      operationId: task_tracker.api.issues.gantt
       summary: Run processing of issues to gantt
       description: Execute hard calculation, and so on
       tags:

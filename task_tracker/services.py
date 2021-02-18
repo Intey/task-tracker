@@ -1,4 +1,4 @@
-from jira_proxy.entities import User, Issue
+from task_tracker.entities import User, Issue
 import typing as t
 
 

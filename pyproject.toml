@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "jira-proxy"
+name = "task-tracker"
 version = "0.1.0"
 description = ""
-authors = ["intey <churin.d.r@sberbank.ru>"]
+authors = ["intey <ziexe0@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
