@@ -1,0 +1,213 @@
+openapi: "3.0.0"
+tags:
+  - name: issues
+    description: plan work as little tasks
+  - name: users
+    description: control users - your resources
+  - name: operations
+    description: core business logic or just not REST
+
+info:
+  title: "{{title}}"
+  version: "1.0"
+
+servers:
+  - url: /api
+
+paths:
+  /issues:
+    post:
+      tags:
+        - issues
+      summary: Create issue
+      description: add new issue to system
+      responses:
+        "200":
+          description: issue created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    description: created issue key
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/issue"
+    get:
+      tags:
+        - issues
+      summary: search issues
+      description: loads pack of issues is system
+      parameters:
+        - name: skilled
+          description: issues with skill parameter filled
+          schema:
+            type: boolean
+        - name: estimated
+          description: issues that has estimated
+          schema:
+            type: boolean
+        - name: priority
+          description: issues with given priority
+          schema:
+            type: string
+      responses:
+        "200":
+          description: issues found
+          content:
+            application/json:
+              schema:
+                description: issues array
+                type: object
+                properties:
+                  issues:
+                    description: issues array
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/issue"
+  /issues/gantt:
+    post:
+      operationId: jira_proxy.api.issues.gantt
+      summary: Run processing of issues to gantt
+      description: Execute hard calculation, and so on
+      tags:
+        - issues
+        - operations
+      responses:
+        "200":
+          description: processing done
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /users:
+    post:
+      tags:
+        - users
+      summary: create user
+      description: add new user as exists resource
+      responses:
+        "200":
+          description: users list
+          content:
+            application/json:
+              schema:
+                type: object
+  /users/{nick}:
+    get:
+      tags:
+        - users
+      parameters:
+        - name: nick
+          description: user unique nick
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: processing done
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user"
+  /users/{nick}/fullfill:
+    post:
+      summary: fill user with tasks
+      description: assign to user tasks, that match paramaters
+      tags:
+        - operations
+      parameters:
+        - name: nick
+          description: user nick, to who issues will be assigned
+          schema:
+            type: string
+          in: path
+        - name: unskilled
+          description: use issues with expectd skill, that user didn't has
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: user filled by tasks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issues:
+                    type: array
+                    descirption: assigned issues
+                    items:
+                      $ref: "#/components/schemas/assignedIssue"
+
+components:
+  schemas:
+    issue:
+      type: object
+      description: issue object
+      required: # ignored by validators
+        - summary
+      additionalProperties: false
+      properties:
+        summary:
+          type: string
+          description: short description of issue
+        description:
+          type: string
+          description: full description of issue
+        estimation:
+          type: integer
+          description: how muck time needed to make this issues
+        due_date:
+          type: string
+          format: date
+          description: date before that issue should be done
+        assigned:
+          type: string
+          description: who is going to do this issue
+    assignedIssue:
+      type: object
+      properties:
+        key:
+          type: string
+        link:
+          type: string
+        stolen:
+          type: string
+          description: user link, from who this issue was stolen
+    user:
+      description: user object
+      type: object
+      additionalProperties: false
+      properties:
+        nick:
+          type: string
+          description: user unique identifier
+
+
+#  /sse:
+#    get:
+#      summary: "subscribe"
+#      produces:
+#        - text/event-stream
+#      responses:
+#        default:
+#          description: example of defining events for sse
+#          schema:
+#            type: object
+#            x-events:
+#              issue_create_sync:
+#                type: object
+#                properties:
+#                  issue_id:
+#                    type: string
+#                  result:
+#                    type: bool
+#                  note:
+#                    type: string
